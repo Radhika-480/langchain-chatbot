@@ -1,5 +1,5 @@
-# tools.py
-
+import random  # ✅ Fixed import
+import math
 from langchain.tools import tool
 from datetime import datetime
 from db import db # Mongo collection
@@ -22,48 +22,22 @@ def add_contract_tool(
     unit: str,
     category: str,
     sub_category: str,
-    tags: Annotated[List[str], "List of tags related to the product"],  # ✅ Gemini needs this!
+    tags: Annotated[List[str], "List of tags related to the product"],
     warranty_tenure: int,
     warranty_unit: str,
     date_of_delivery: str,
     returnable: bool,
-    return_conditions: Annotated[List[str], "List of return conditions like accepted, unused"],  # ✅ Required!
+    return_conditions: Annotated[List[str], "List of return conditions like accepted, unused"],
     status: str,
     store_id: str = "ST001",
     org_id: str = "ORG001"
 ) -> str:
-   
-# @tool
-# def add_contract_tool(
-#     vendor_name: str,
-#     vendor_email: str,
-#     phone: str,
-#     address: str,
-#     pincode: str,
-#     business_type: str,
-#     gst_number: str,
-#     tax: float,
-#     product_name: str,
-#     quantity: int,
-#     unit: str,
-#     category: str,
-#     sub_category: str,
-#     tags: list,
-#     warranty_tenure: int,
-#     warranty_unit: str,
-#     date_of_delivery: str,
-#     returnable: bool,
-#     return_conditions: list,
-#     status: str,
-#     store_id: str = "ST001",  # temp static (in real: pass from token/session)
-#     org_id: str = "ORG001"
-# ) -> str:
     """
     Adds a vendor contract to MongoDB directly (no internal API call).
     """
     try:
-        total_contracts = db.Contracts.count_documents({})
-        contract_id = f"C{total_contracts + 1:03}"
+
+        contract_id = random.randint(100000, 999999)  # ✅ Fixed random generation
 
         payload = {
             "contract_id": contract_id,
@@ -92,7 +66,7 @@ def add_contract_tool(
             "created_at": datetime.now()
         }
 
-        db.insert_one(payload)
+        db.Contracts.insert_one(payload)  # ✅ Fixed collection reference
 
         return f"Contract {contract_id} created successfully."
     except Exception as e:
